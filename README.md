@@ -6,8 +6,8 @@
 
 ## Image
 
-
-
+<img src=https://github.com/YusukeKato/Images_Repository/blob/master/robosys_ros_window.png width=50%>
+                                
 ## Rules
 
 - 画面をタッチすることで棒を動かせます。
@@ -56,6 +56,14 @@ http://<your PC ip address>:8080
 
 https://youtu.be/ooVxHlUM3bM
 
+
+## System
+
+<img src=https://github.com/YusukeKato/Images_Repository/blob/master/robosys_ros_system.png width=70%>
+
+- 各スマートフォンに対して一つずつindex.htmlを割り当てる。
+
+- それぞれの棒の座標と玉の座標を、ROSのノードを介して相手のスマートフォンに送信。
 
 
 ## License
