@@ -38,14 +38,15 @@ $ python -m SimpleHTTPServer 8080
 
 スマートフォンでそれぞれのURLにアクセス
 
+```
 player1
 
-http://your PC ip address:8000
+http://<your PC ip address>:8000
 
 player2
 
-http://your PC ip address:8080
-
+http://<your PC ip address>:8080
+```
 
 ## Youtube
 
