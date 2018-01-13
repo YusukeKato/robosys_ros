@@ -1,0 +1,5 @@
+<launch>
+	<node pkg="robosys_ros" name="subscriber1" type="subscriber1.py" required="true" />
+	<node pkg="robosys_ros" name="subscriber2" type="subscriber2.py" required="true" />
+	<node pkg="robosys_ros" name="subscriber3" type="subscriber3.py" required="true" />
+</launch>

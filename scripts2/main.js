@@ -6,19 +6,19 @@ ros.on('close', function(){ console.log("WebSocket: closed");});
 
 var wall1 = [140, 10];
 var wall2 = [140, 120];
-var circle = [140, 60, 4, 3];
+var circle = [140, 60, 4, -3];
 var y_sub = 0;
 
 var subscriber1 = new ROSLIB.Topic({
-	ros : ros,
-	name : '/subscriber1',
-	messageType : 'robosys_ros/WallPosition'
+    ros : ros,
+    name : '/subscriber1',
+    messageType : 'robosys_ros/WallPosition'
 });
 
 var subscriber2 = new ROSLIB.Topic({
-	ros : ros,
-	name : '/subscriber2',
-	messageType : 'robosys_ros/WallPosition'
+    ros : ros,
+    name : '/subscriber2',
+    messageType : 'robosys_ros/WallPosition'
 });
 
 var subscriber3 = new ROSLIB.Topic({
@@ -29,19 +29,20 @@ var subscriber3 = new ROSLIB.Topic({
 
 function sub_pub(){
 	var msg = new ROSLIB.Message({x:wall2[0], y:wall2[1]});
-	subscriber1.publish(msg);
-	console.log("sub_pub1");
+	subscriber2.publish(msg);	
+	console.log("sub_pub2");
 }
 
-function sub_pub3() {
-	var msg = new ROSLIB.Message({x:circle[0], y:circle[1]});
-	subscriber3.publish(msg);
-}
-
-subscriber2.subscribe(function(message) {
+subscriber1.subscribe(function(message) {
 	wall1[0] = message.x;
 	y_sub = message.y;
-	console.log("sub2");
+	console.log("sub1");
+});
+
+subscriber3.subscribe(function(message) {
+	circle[0] = message.x;
+	circle[1] = 120 - message.y;
+	console.log("sub3");
 });
 
 function SideWall(canvas) {
@@ -110,18 +111,20 @@ var MoveCircle = function() {
 		circle[0] = 280;
 	}
 	// player wall
-	if(wall1[0]-20 < circle[0] && circle[0] < wall1[0]+20 &&
-		wall1[1] < circle[1] && circle[1] < wall1[1]+10) {
-		circle[1] = 20;
+	var a1 = circle[0] - wall1[0];
+	var a2 = circle[1] - wall1[1];
+	if(Math.sqrt(a1*a1+a2*a2) < 14) {
+		circle[1] = 24;
 		circle[3] = -1 * circle[3];
 	} 	
-	if(wall2[0]-20 < circle[0] && circle[0] < wall2[0]+20 &&
-		wall2[1]-10 < circle[1] && circle[1] < wall2[1]) {
-		circle[1] = 110;
+	var b1 = circle[0] - wall2[0];
+	var b2 = circle[1] - wall2[1];
+	if(Math.sqrt(b1*b1+b2*b2) < 14) {
+		circle[1] = 106;
 		circle[3] = -1 * circle[3];
 	}
 	// out circle
-	if(circle[1] < -100 || circle[1] > 300) {
+	if(circle[1] < 0 || circle[1] > 300) {
 		circle[1] = 60;
 		circle[2] = 4;
 		circle[3] = 3;
@@ -134,19 +137,35 @@ var MoveCircle = function() {
 	count = count + 1;
 }
 
+function draw() {
+	SideWall(canvas);
+	CreateWall(canvas, wall1[0], 10);
+	CreateWall(canvas, wall2[0], wall2[1]);
+	CreateCircle(canvas, circle[0], circle[1]);
+}
+
+function onClick() {
+	//mouse
+        var rect = event.target.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+	wall2[0] = x;
+	SideWall(canvas);
+        CreateWall(canvas, wall1[0], 10);
+        CreateWall(canvas, touch_x, wall2[1]);
+        CreateCircle(canvas, circle[0], circle[1]);
+}
+
 var canvas = document.getElementById('canvas_main');
 var ctx = canvas.getContext('2d');
+canvas.addEventListener('click', onClick, false);
 
-SideWall(canvas);
-CreateWall(canvas, wall1[0], 10);
-CreateWall(canvas, wall2[0], wall2[1]);
-CreateCircle(canvas, circle[0], circle[1]);
-
-setInterval(MoveCircle, 50);
+setInterval(draw, 50);
+//setInterval(MoveCircle, 50);
 setInterval(sub_pub, 100);
-setInterval(sub_pub3, 100);
 
 canvas.addEventListener('touchmove', function(event) {
+	//touch
 	touchXY(event);
 	wall2[0] = touch_x;
 	SideWall(canvas);
