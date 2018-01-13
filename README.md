@@ -47,6 +47,7 @@ player2
 
 http://<your PC ip address>:8080
 ```
+＊　ポートの違いに注意
 
 ## Youtube
 
